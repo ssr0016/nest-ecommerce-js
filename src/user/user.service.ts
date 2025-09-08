@@ -26,4 +26,8 @@ export class UserService {
 
     return user;
   }
+
+  async findAll() {
+    return this.usersRepository.find();
+  }
 }
