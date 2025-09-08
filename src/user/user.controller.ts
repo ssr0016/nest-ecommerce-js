@@ -2,6 +2,8 @@ import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from 'src/cores/guards/auth.guard';
+import { CurrentUser } from 'src/cores/decorators/current-user.decorators';
+import type { UserPayload } from 'src/user/interfaces/user-payload.interface';
 
 @Controller('/api/v1/users')
 export class UserController {
@@ -14,7 +16,7 @@ export class UserController {
 
   @Get('/me')
   @UseGuards(AuthGuard)
-  getCurrentUser() {
-    return this.userService.findAll();
+  getCurrentUser(@CurrentUser() user: UserPayload) {
+    return user;
   }
 }
