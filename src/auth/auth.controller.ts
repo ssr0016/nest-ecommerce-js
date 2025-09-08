@@ -6,9 +6,9 @@ import { SignUpAuthDTO } from './dto/sign-up-auth.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  async signUp(@Body() createAuthDto: SignUpAuthDTO) {
-    const accessToken = await this.authService.signUp(createAuthDto);
+  @Post('/sign-up')
+  async signUp(@Body() signUpAuthDTO: SignUpAuthDTO) {
+    const accessToken = await this.authService.signUp(signUpAuthDTO);
 
     return {
       message: 'Sign up successfully',
@@ -16,8 +16,8 @@ export class AuthController {
     };
   }
 
-  @Post()
-  signIn(@Body() createAuthDto: SignUpAuthDTO) {
-    // return this.authService.signUp(createAuthDto);
+  @Post('/sign-in')
+  signIn(@Body() signInAuthDTO: SignUpAuthDTO) {
+    return this.authService.signIn(signInAuthDTO);
   }
 }
