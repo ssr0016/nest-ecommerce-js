@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { User } from 'src/user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { RoleModule } from './role/role.module';
+import { Role } from 'src/role/entities/role.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { RoleModule } from './role/role.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User],
+        entities: [User, Role],
         synchronize: true,
       }),
       inject: [ConfigService],
