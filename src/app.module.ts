@@ -9,6 +9,8 @@ import { User } from 'src/user/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { RoleModule } from './role/role.module';
 import { Role } from 'src/role/entities/role.entity';
+import { EndpointModule } from './endpoint/endpoint.module';
+import { Endpoint } from 'src/endpoint/entities/endpoint.entity';
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { Role } from 'src/role/entities/role.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User, Role],
+        entities: [User, Role, Endpoint],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -30,6 +32,7 @@ import { Role } from 'src/role/entities/role.entity';
     UserModule,
     AuthModule,
     RoleModule,
+    EndpointModule,
   ],
   controllers: [AppController],
   providers: [AppService],
