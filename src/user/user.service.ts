@@ -4,19 +4,23 @@ import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
+import { RoleService } from 'src/role/role.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private roleService: RoleService,
   ) {}
   async create(createUserDto: CreateUserDto) {
+    const role = await this.roleService.getRole('user');
+
     const user = new User();
 
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    Object.assign(user, { ...createUserDto, password: hashedPassword });
+    Object.assign(user, { ...createUserDto, password: hashedPassword, role });
 
     return this.usersRepository.save(user);
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from 'src/role/entities/role.entity';
@@ -15,6 +15,14 @@ export class RoleService {
     const role = new Role();
     Object.assign(role, createRoleDto);
     return this.roleRepository.save(role);
+  }
+
+  async getRole(name: string) {
+    const role = this.roleRepository.findOne({ where: { name } });
+
+    if (!role) throw new NotFoundException(`No role ${name} found`);
+
+    return role;
   }
 
   findAll() {
