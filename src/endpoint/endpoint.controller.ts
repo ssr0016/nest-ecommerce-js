@@ -1,9 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EndpointService } from './endpoint.service';
 import { CreateEndpointDto } from './dto/create-endpoint.dto';
 import { UpdateEndpointDto } from './dto/update-endpoint.dto';
 
-@Controller('endpoint')
+@Controller('api/v1/endpoint')
 export class EndpointController {
   constructor(private readonly endpointService: EndpointService) {}
 
@@ -23,7 +31,10 @@ export class EndpointController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEndpointDto: UpdateEndpointDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateEndpointDto: UpdateEndpointDto,
+  ) {
     return this.endpointService.update(+id, updateEndpointDto);
   }
 

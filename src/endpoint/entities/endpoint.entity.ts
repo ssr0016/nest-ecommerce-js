@@ -1,11 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-enum HttpEndPoint {
-  GET,
-  POST,
-  PATCH,
-  DELETE,
-}
+export type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 @Entity()
 export class Endpoint {
@@ -16,5 +11,5 @@ export class Endpoint {
   url: string;
 
   @Column()
-  method: HttpEndPoint;
+  method: HttpMethod;
 }
