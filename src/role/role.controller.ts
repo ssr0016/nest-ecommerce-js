@@ -28,14 +28,14 @@ export class RoleController {
     return this.roleService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roleService.findOne(+id);
+  @Get(':name')
+  findOne(@Param('name') name: string) {
+    return this.roleService.getRole(name);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.roleService.update(+id, updateRoleDto);
+  @Patch(':name')
+  update(@Param('name') name: string, @Body() updateRoleDto: UpdateRoleDto) {
+    return this.roleService.update(name, updateRoleDto);
   }
 
   @Delete(':id')
