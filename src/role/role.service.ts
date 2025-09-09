@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from 'src/role/entities/role.entity';
@@ -18,7 +22,10 @@ export class RoleService {
   }
 
   async getRole(name: string) {
-    const role = await this.roleRepository.findOne({ where: { name } });
+    const role = await this.roleRepository.findOne({
+      where: { name, isActive: true },
+      relations: { users: true },
+    });
 
     if (!role) throw new NotFoundException(`No role ${name} found`);
 
@@ -26,7 +33,7 @@ export class RoleService {
   }
 
   async findAll() {
-    const roles = await this.roleRepository.find();
+    const roles = await this.roleRepository.find({ where: { isActive: true } });
     return roles;
   }
 
@@ -38,7 +45,18 @@ export class RoleService {
     return this.roleRepository.save(role);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(name: string) {
+    // soft delete
+    const role = await this.getRole(name);
+
+    if (role.users?.length > 0)
+      throw new BadRequestException(`Cannot remove role ${name}`);
+
+    // User 1 -> admin
+    // User 2 -> user
+    //        -> management
+
+    role.isActive = false;
+    await this.roleRepository.save(role);
   }
 }

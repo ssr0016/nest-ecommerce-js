@@ -38,8 +38,8 @@ export class RoleController {
     return this.roleService.update(name, updateRoleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roleService.remove(+id);
+  @Delete(':name')
+  remove(@Param('name') name: string) {
+    return this.roleService.remove(name);
   }
 }
