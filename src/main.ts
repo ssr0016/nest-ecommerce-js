@@ -71,6 +71,7 @@ async function bootstrap() {
           .values({
             endpointId: endpoint.id,
             roleName: role.name,
+            isAllow: role.name === 'admin' ? true : false,
           })
           .execute();
       }
