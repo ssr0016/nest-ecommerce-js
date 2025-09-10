@@ -10,7 +10,7 @@ import {
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { TransformDTO } from 'src/cores/interceptors/transfrom-dto.interceptors';
+import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseRoleDTO } from 'src/role/dto/response-role.dto';
 
 @Controller('api/v1/roles')

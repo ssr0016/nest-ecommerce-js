@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { getAllRoutes } from 'src/utils/app.util';
+import { getAllRoutes } from 'src/_utils/app.util';
 import { Endpoint, HttpMethod } from './endpoint/entities/endpoint.entity';
 import { Role } from 'src/role/entities/role.entity';
 import { Permission } from 'src/permissions/entities/permission.entity';

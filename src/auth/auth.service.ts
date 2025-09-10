@@ -3,7 +3,7 @@ import { SignUpAuthDTO } from './dto/sign-up-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
-import { generateToken } from 'src/utils/token.util';
+import { generateToken } from 'src/_utils/token.util';
 
 @Injectable()
 export class AuthService {
