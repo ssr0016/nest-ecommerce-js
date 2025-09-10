@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { getAllRoutes } from 'src/utils/app.util';
 import { Endpoint, HttpMethod } from './endpoint/entities/endpoint.entity';
+import { Role } from 'src/role/entities/role.entity';
+import { Permission } from 'src/permissions/entities/permission.entity';
 
 export let globalApp: any;
 
@@ -22,10 +24,15 @@ async function bootstrap() {
     queryRunner.connect();
     await queryRunner.startTransaction();
 
+    // DELETE ALL ROUTES
     await queryRunner.query('TRUNCATE endpoint RESTART IDENTITY CASCADE');
+
+    // DELETE ALL PERMISSIONS
+    await queryRunner.query('TRUNCATE permission RESTART IDENTITY CASCADE');
 
     console.log('Truncate successfully!');
 
+    // ADD ROUTES
     for (const route of allRoutes.routes) {
       const [method, url] = route.split(' ');
 
@@ -38,6 +45,35 @@ async function bootstrap() {
           method: method as HttpMethod,
         })
         .execute();
+    }
+
+    // ADD ROLES
+    const roles = await queryRunner.manager
+      .getRepository(Role)
+      .createQueryBuilder('role')
+      .where('role.isActive = :isActive', { isActive: true })
+      .getMany();
+
+    // console.log(roles);
+
+    const endpoints = await queryRunner.manager
+      .getRepository(Endpoint)
+      .createQueryBuilder('endpoint')
+      .getMany();
+
+    for (const role of roles) {
+      // Loop get all endpoints
+      for (const endpoint of endpoints) {
+        queryRunner.manager
+          .createQueryBuilder()
+          .insert()
+          .into(Permission)
+          .values({
+            endpointId: endpoint.id,
+            roleName: role.name,
+          })
+          .execute();
+      }
     }
 
     await queryRunner.commitTransaction();
