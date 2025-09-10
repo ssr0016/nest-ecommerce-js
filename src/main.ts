@@ -16,16 +16,20 @@ async function bootstrap() {
   const allRoutes = getAllRoutes(app);
 
   const dataSource = app.get(DataSource);
+  const queryRunner = dataSource.createQueryRunner();
 
   try {
-    await dataSource.query('TRUNCATE endpoint RESTART IDENTITY CASCADE');
+    queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    console.log('truncate successfully!');
+    await queryRunner.query('TRUNCATE endpoint RESTART IDENTITY CASCADE');
+
+    console.log('Truncate successfully!');
 
     for (const route of allRoutes.routes) {
       const [method, url] = route.split(' ');
 
-      dataSource
+      queryRunner.manager
         .createQueryBuilder()
         .insert()
         .into(Endpoint)
@@ -35,9 +39,14 @@ async function bootstrap() {
         })
         .execute();
     }
-    console.log('insert successfully!');
+
+    await queryRunner.commitTransaction();
+    console.log('Insert successfully into database!');
   } catch (error) {
+    await queryRunner.rollbackTransaction();
     console.log('Failed to truncate table', error);
+  } finally {
+    await queryRunner.release();
   }
 }
 bootstrap();
