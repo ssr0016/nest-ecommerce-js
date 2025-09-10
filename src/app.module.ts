@@ -11,6 +11,7 @@ import { RoleModule } from './role/role.module';
 import { Role } from 'src/role/entities/role.entity';
 import { EndpointModule } from './endpoint/endpoint.module';
 import { Endpoint } from 'src/endpoint/entities/endpoint.entity';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { Endpoint } from 'src/endpoint/entities/endpoint.entity';
     AuthModule,
     RoleModule,
     EndpointModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
