@@ -2,25 +2,42 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DataSource } from 'typeorm';
+import { getAllRoutes } from 'src/utils/app.util';
+import { Endpoint, HttpMethod } from './endpoint/entities/endpoint.entity';
+
+export let globalApp: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  globalApp = app;
   app.useGlobalPipes(new ValidationPipe());
+  await app.listen(process.env.PORT ?? 3000);
 
-  // DELETE ALL ENDPOINTS (truncate)
+  const allRoutes = getAllRoutes(app);
+
   const dataSource = app.get(DataSource);
 
   try {
-    // TRUNCATE sch.mytable RESTART IDENTITY CASCADE;
-    dataSource.query('TRUNCATE endpoint RESTART IDENTITY CASCADE');
+    await dataSource.query('TRUNCATE endpoint RESTART IDENTITY CASCADE');
+
     console.log('truncate successfully!');
+
+    for (const route of allRoutes.routes) {
+      const [method, url] = route.split(' ');
+
+      dataSource
+        .createQueryBuilder()
+        .insert()
+        .into(Endpoint)
+        .values({
+          url,
+          method: method as HttpMethod,
+        })
+        .execute();
+    }
+    console.log('insert successfully!');
   } catch (error) {
     console.log('Failed to truncate table', error);
   }
-
-  // GET ALL CURRENT ENDPOINTS -> 10 -> 100
-  // INSERT TO DATABASE
-
-  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
