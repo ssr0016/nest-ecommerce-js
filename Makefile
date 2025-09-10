@@ -7,3 +7,4 @@
 # npm i bcrypt
 # npm i -D @types/bcrypt
 # npm i --save class-validator class-transformer
+#  npm install --save @nestjs/swagger

@@ -6,6 +6,7 @@ import { getAllRoutes } from 'src/_utils/app.util';
 import { Endpoint, HttpMethod } from './endpoint/entities/endpoint.entity';
 import { Role } from 'src/role/entities/role.entity';
 import { Permission } from 'src/permissions/entities/permission.entity';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 export let globalApp: any;
 
@@ -13,7 +14,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   globalApp = app;
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT ?? 3000);
+
+  const config = new DocumentBuilder()
+    .setTitle('eCommerce API')
+    .setDescription('The eCommerce API description')
+    .setVersion('1.0')
+    .addTag('eCommerce')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
+
+  await app.listen(3000);
 
   const allRoutes = getAllRoutes(app);
 
