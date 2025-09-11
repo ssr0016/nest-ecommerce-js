@@ -19,14 +19,16 @@ export class CategoryService {
   }
 
   async findAll() {
-    const categories = await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find({
+      where: { isActive: true },
+    });
 
     return categories;
   }
 
   async findOne(id: number) {
     const category = await this.categoryRepository.findOne({
-      where: { id },
+      where: { id, isActive: true },
     });
 
     if (!category) throw new NotFoundException(`No category ${id} found`);
@@ -42,7 +44,11 @@ export class CategoryService {
     return this.categoryRepository.save(category);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.findOne(id);
+
+    category.isActive = false;
+
+    await this.categoryRepository.save(category);
   }
 }

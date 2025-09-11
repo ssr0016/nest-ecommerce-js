@@ -11,5 +11,8 @@ export class ResponseCategoryDto {
   description: string;
 
   @Expose()
+  isActive: boolean;
+
+  @Expose()
   slug: string;
 }
