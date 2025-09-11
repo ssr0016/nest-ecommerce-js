@@ -1,5 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
+import {
+  AfterUpdate,
+  BeforeInsert,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import slugify from 'slugify';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
@@ -13,4 +19,12 @@ export class Category {
 
   @Column()
   slug: string; // SEO
+
+  @BeforeInsert()
+  @AfterUpdate()
+  generateSlug() {
+    const date = new Date();
+
+    this.slug = `${slugify(this.name)}-${date.getTime()}`;
+  }
 }
