@@ -1,6 +1,12 @@
 import { Permission } from 'src/permissions/entities/permission.entity';
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity()
 export class Role {
@@ -10,8 +16,10 @@ export class Role {
   @Column()
   description: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  // @Column({ default: true })
+  // isActive: boolean;
+  @DeleteDateColumn()
+  deletedDate: Date;
 
   @OneToMany(() => User, (user) => user.role)
   users: User[];

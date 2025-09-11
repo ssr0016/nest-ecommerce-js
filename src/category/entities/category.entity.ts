@@ -2,6 +2,7 @@ import {
   AfterUpdate,
   BeforeInsert,
   Column,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,8 +18,12 @@ export class Category {
   @Column()
   description: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  // @Column({ default: true })
+  // isActive: boolean;
+
+  // This is the another way how to delete a row
+  @DeleteDateColumn()
+  deletedDate: Date;
 
   @Column()
   slug: string; // SEO

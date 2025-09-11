@@ -23,7 +23,7 @@ export class RoleService {
 
   async getRole(name: string) {
     const role = await this.roleRepository.findOne({
-      where: { name, isActive: true },
+      where: { name },
       relations: { users: true },
     });
 
@@ -33,7 +33,7 @@ export class RoleService {
   }
 
   async findAll() {
-    const roles = await this.roleRepository.find({ where: { isActive: true } });
+    const roles = await this.roleRepository.find();
     return roles;
   }
 
@@ -56,7 +56,6 @@ export class RoleService {
     // User 2 -> user
     //        -> management
 
-    role.isActive = false;
-    await this.roleRepository.save(role);
+    await this.roleRepository.softRemove(role);
   }
 }

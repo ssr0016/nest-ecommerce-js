@@ -73,7 +73,7 @@ async function bootstrap() {
     const roles = await queryRunner.manager
       .getRepository(Role)
       .createQueryBuilder('role')
-      .where('role.isActive = :isActive', { isActive: true })
+      .where('role.deletedDate IS NULL')
       .getMany();
 
     // console.log(roles);
