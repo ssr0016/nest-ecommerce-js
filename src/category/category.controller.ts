@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -15,6 +16,7 @@ import { ResponseCategoryDto } from 'src/category/dto/response-category.dto';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { AuthGuard } from 'src/_cores/guards/auth.guard';
 import { API_VERSION } from 'src/_cores/constants/app.constant';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller(`${API_VERSION}/categories`)
 @TransformDTO(ResponseCategoryDto)
@@ -23,6 +25,7 @@ export class CategoryController {
 
   @Post()
   @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
@@ -33,8 +36,8 @@ export class CategoryController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.categoryService.findOne(id);
   }
 
   @Patch(':id')
