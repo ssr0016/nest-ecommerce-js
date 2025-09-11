@@ -1,8 +1,9 @@
 import { Controller, Request, Get, Body, Post } from '@nestjs/common';
 import { EndpointService } from './endpoint.service';
 import { CreateEndpointDto } from 'src/endpoint/dto/create-endpoint.dto';
+import { API_VERSION } from 'src/_cores/constants/app.constant';
 
-@Controller('api/v1/endpoints')
+@Controller(`${API_VERSION}/endpoints`)
 export class EndpointController {
   constructor(private readonly endpointService: EndpointService) {}
 

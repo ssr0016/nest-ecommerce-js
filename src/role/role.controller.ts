@@ -12,8 +12,9 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseRoleDTO } from 'src/role/dto/response-role.dto';
+import { API_VERSION } from 'src/_cores/constants/app.constant';
 
-@Controller('api/v1/roles')
+@Controller(`${API_VERSION}/roles`)
 @TransformDTO(ResponseRoleDTO)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}

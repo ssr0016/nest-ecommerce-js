@@ -4,8 +4,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from 'src/_cores/guards/auth.guard';
 import { CurrentUser } from 'src/_cores/decorators/current-user.decorators';
 import type { UserPayload } from 'src/user/interfaces/user-payload.interface';
+import { API_VERSION } from 'src/_cores/constants/app.constant';
 
-@Controller('/api/v1/users')
+@Controller(`${API_VERSION}/users`)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
