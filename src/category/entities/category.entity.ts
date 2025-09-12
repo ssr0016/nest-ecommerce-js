@@ -5,6 +5,7 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import slugify from 'slugify';
@@ -26,10 +27,14 @@ export class Category {
   deletedDate: Date;
 
   // Child Category
-  @ManyToOne(() => Category, (c) => c.parent, {
+  @ManyToOne(() => Category, (c) => c.children, {
     nullable: true,
   })
   parent: Category | null;
+
+  @OneToMany(() => Category, (c) => c.parent)
+  children: Category[];
+
   @BeforeInsert()
   @AfterUpdate()
   generateSlug() {

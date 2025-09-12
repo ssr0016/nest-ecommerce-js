@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
@@ -15,8 +15,9 @@ export class CategoryService {
   async create(createCategoryDto: CreateCategoryDto) {
     let parentCategory: Category | null = null;
 
-    if (createCategoryDto.parentId)
+    if (createCategoryDto.parentId) {
       parentCategory = await this.findOne(createCategoryDto.parentId);
+    }
 
     const category = new Category();
     category.parent = parentCategory;
@@ -26,8 +27,16 @@ export class CategoryService {
   }
 
   async findAll() {
-    const categories = await this.categoryRepository.find();
+    const categories = await this.categoryRepository.find({
+      where: { parent: IsNull() },
+      relations: {
+        children: true,
+      },
+    });
 
+    // Parent - children: [{}, {}]
+
+    console.log(categories[0].children[0]);
     return categories;
   }
 
