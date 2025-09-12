@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateCategoryDto {
   @ApiProperty({ default: 'fake.category' })
@@ -8,4 +8,7 @@ export class CreateCategoryDto {
   @ApiProperty({ default: 'fake.description' })
   @IsNotEmpty()
   description: string;
+
+  @IsNumber()
+  parentId: number;
 }

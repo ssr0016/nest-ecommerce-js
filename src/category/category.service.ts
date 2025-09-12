@@ -12,8 +12,15 @@ export class CategoryService {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
+  async create(createCategoryDto: CreateCategoryDto) {
+    let parentCategory: Category | null = null;
+
+    if (createCategoryDto.parentId)
+      parentCategory = await this.findOne(createCategoryDto.parentId);
+
     const category = new Category();
+    category.parent = parentCategory;
+
     Object.assign(category, createCategoryDto);
     return this.categoryRepository.save(category);
   }
@@ -48,5 +55,5 @@ export class CategoryService {
     await this.categoryRepository.softRemove(category);
   }
 }
-// Many to One relationship
+// Many to One
 // Parent Category -> [Child category1,  category2, category3]

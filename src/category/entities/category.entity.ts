@@ -26,9 +26,10 @@ export class Category {
   deletedDate: Date;
 
   // Child Category
-  @ManyToOne(() => Category, (c) => c.category)
-  category: Category;
-
+  @ManyToOne(() => Category, (c) => c.parent, {
+    nullable: true,
+  })
+  parent: Category | null;
   @BeforeInsert()
   @AfterUpdate()
   generateSlug() {
