@@ -35,14 +35,15 @@ export class CategoryService {
     });
 
     // Parent - children: [{}, {}]
-
-    console.log(categories[0].children[0]);
     return categories;
   }
 
   async findOne(id: number) {
     const category = await this.categoryRepository.findOne({
       where: { id },
+      relations: {
+        children: true,
+      },
     });
 
     if (!category) throw new NotFoundException(`No category ${id} found`);

@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import slugify from 'slugify';
+import { Product } from 'src/product/entities/product.entity';
 @Entity()
 export class Category {
   @PrimaryGeneratedColumn()
@@ -34,6 +35,10 @@ export class Category {
 
   @OneToMany(() => Category, (c) => c.parent)
   children: Category[];
+
+  // Product
+  @OneToMany(() => Product, (p) => p.category)
+  products: Product[];
 
   @BeforeInsert()
   @AfterUpdate()

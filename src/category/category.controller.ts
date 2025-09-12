@@ -17,30 +17,34 @@ import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors
 import { AuthGuard } from 'src/_cores/guards/auth.guard';
 import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { ResponseCategoryNotChildrenDto } from 'src/category/dto/response-category-not-children';
 
 @Controller(`${API_VERSION}/categories`)
-@TransformDTO(ResponseCategoryDto)
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
   @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
+  @TransformDTO(ResponseCategoryNotChildrenDto)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
 
   @Get()
+  @TransformDTO(ResponseCategoryDto)
   findAll() {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
+  @TransformDTO(ResponseCategoryDto)
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoryService.findOne(id);
   }
 
   @Patch(':id')
+  @TransformDTO(ResponseCategoryNotChildrenDto)
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
