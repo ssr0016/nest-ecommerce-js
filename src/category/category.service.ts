@@ -48,3 +48,5 @@ export class CategoryService {
     await this.categoryRepository.softRemove(category);
   }
 }
+// Many to One relationship
+// Parent Category -> [Child category1,  category2, category3]

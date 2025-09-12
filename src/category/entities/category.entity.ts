@@ -4,6 +4,7 @@ import {
   Column,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import slugify from 'slugify';
@@ -18,15 +19,15 @@ export class Category {
   @Column()
   description: string;
 
-  // @Column({ default: true })
-  // isActive: boolean;
+  @Column()
+  slug: string; // SEO
 
-  // This is the another way how to delete a row
   @DeleteDateColumn()
   deletedDate: Date;
 
-  @Column()
-  slug: string; // SEO
+  // Child Category
+  @ManyToOne(() => Category, (c) => c.category)
+  category: Category;
 
   @BeforeInsert()
   @AfterUpdate()
