@@ -1,13 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { API_VERSION } from 'src/_cores/constants/app.constant';
+import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
+import { ResponseProductDto } from 'src/product/dto/response-product.dto';
 
-@Controller('product')
+@Controller(`${API_VERSION}/product`)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @TransformDTO(ResponseProductDto)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }

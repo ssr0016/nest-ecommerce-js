@@ -21,7 +21,7 @@ export class Product {
   price: number;
 
   @Column({ type: 'numeric', precision: 6, scale: 2, nullable: true })
-  offerPrice: number;
+  offerPrice: number | null;
 
   @Column({ type: 'varchar', length: 255 })
   shortDescription: string;
