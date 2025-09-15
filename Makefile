@@ -10,3 +10,4 @@
 #  npm install --save @nestjs/swagger
 # npm i slugify
 # npm i nestjs-paginate
+# npm i -D @types/multer
