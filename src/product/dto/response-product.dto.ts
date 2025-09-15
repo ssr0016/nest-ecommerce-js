@@ -21,6 +21,9 @@ export class ResponseProductDto {
   quantity: number;
 
   @Expose()
+  slug: string;
+
+  @Expose()
   categoryId: number;
 
   @Transform(({ obj }: { obj: Product }) => obj?.category?.name)
