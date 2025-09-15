@@ -23,7 +23,7 @@ export class ResponseProductDto {
   @Expose()
   categoryId: number;
 
-  @Transform(({ obj }: { obj: Product }) => obj.category.name)
+  @Transform(({ obj }: { obj: Product }) => obj?.category?.name)
   @Expose()
   category: string;
 }

@@ -14,12 +14,12 @@ import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseProductDto } from 'src/product/dto/response-product.dto';
 
-@Controller(`${API_VERSION}/product`)
+@Controller(`${API_VERSION}/products`)
+@TransformDTO(ResponseProductDto)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @TransformDTO(ResponseProductDto)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
