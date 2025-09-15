@@ -18,7 +18,7 @@ import * as nestjsPaginate from 'nestjs-paginate';
 import { Product } from 'src/product/entities/product.entity';
 
 @Controller(`${API_VERSION}/products`)
-// @TransformDTO(ResponseProductDto)
+@TransformDTO(ResponseProductDto)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 

@@ -20,6 +20,21 @@ export class TransformDTOInterceptor<T> implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
+        if (data && data.data) {
+          return {
+            message: 'success',
+            data: plainToInstance(this.dtoClass, data.data, {
+              excludeExtraneousValues: true,
+            }),
+            pagination: {
+              itemsPerPage: data.meta.itemsPerPage,
+              totalItems: data.meta.totalItems,
+              currentPage: data.meta.currentPage,
+              totalPages: data.meta.totalPages,
+            },
+          };
+        }
+
         return {
           message: 'success',
           data: plainToInstance(this.dtoClass, data, {
