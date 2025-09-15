@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from 'src/product/entities/product.entity';
 import { CategoryService } from 'src/category/category.service';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class ProductService {
@@ -56,8 +57,22 @@ export class ProductService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    const product = await this.findOne(id);
+
+    let category: Category = product.category;
+
+    if (updateProductDto.categoryId) {
+      category = await this.categoryService.findOne(
+        updateProductDto.categoryId,
+      );
+    }
+
+    product.category = category;
+
+    Object.assign(product, updateProductDto);
+
+    return this.productRepository.save(product);
   }
 
   remove(id: number) {

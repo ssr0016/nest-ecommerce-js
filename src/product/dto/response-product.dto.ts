@@ -3,6 +3,8 @@ import { Product } from 'src/product/entities/product.entity';
 
 export class ResponseProductDto {
   @Expose()
+  id: number;
+  @Expose()
   name: string;
 
   @Expose()
