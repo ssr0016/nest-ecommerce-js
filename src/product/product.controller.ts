@@ -14,9 +14,11 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseProductDto } from 'src/product/dto/response-product.dto';
+import * as nestjsPaginate from 'nestjs-paginate';
+import { Product } from 'src/product/entities/product.entity';
 
 @Controller(`${API_VERSION}/products`)
-@TransformDTO(ResponseProductDto)
+// @TransformDTO(ResponseProductDto)
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -26,8 +28,11 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.findAll();
+  @Get()
+  public findAll(
+    @nestjsPaginate.Paginate() query: nestjsPaginate.PaginateQuery,
+  ): Promise<nestjsPaginate.Paginated<Product>> {
+    return this.productService.findAll(query);
   }
 
   @Get(':id')

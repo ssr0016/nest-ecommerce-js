@@ -6,6 +6,13 @@ import { Repository } from 'typeorm';
 import { Product } from 'src/product/entities/product.entity';
 import { CategoryService } from 'src/category/category.service';
 import { Category } from 'src/category/entities/category.entity';
+import {
+  FilterOperator,
+  FilterSuffix,
+  paginate,
+  Paginated,
+  PaginateQuery,
+} from 'nestjs-paginate';
 
 @Injectable()
 export class ProductService {
@@ -26,13 +33,22 @@ export class ProductService {
     return this.productRepository.save(product);
   }
 
-  async findAll() {
-    const products = await this.productRepository.find({
-      relations: {
-        category: true,
+  // async findAll() {
+  //   const products = await this.productRepository.find();
+  //   return products;
+  // }
+
+  public findAll(query: PaginateQuery): Promise<Paginated<Product>> {
+    return paginate(query, this.productRepository, {
+      sortableColumns: ['id', 'name', 'price'],
+      defaultSortBy: [['price', 'DESC']],
+      searchableColumns: ['name', 'shortDescription', 'longDescription'],
+      filterableColumns: {
+        name: [FilterOperator.EQ, FilterSuffix.NOT],
+        shortDescription: [FilterOperator.EQ, FilterSuffix.NOT],
+        longDescription: [FilterOperator.EQ, FilterSuffix.NOT],
       },
     });
-    return products;
   }
 
   async findOne(id: number) {

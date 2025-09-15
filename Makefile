@@ -9,3 +9,4 @@
 # npm i --save class-validator class-transformer
 #  npm install --save @nestjs/swagger
 # npm i slugify
+# npm i nestjs-paginate
