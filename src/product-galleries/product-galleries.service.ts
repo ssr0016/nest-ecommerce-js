@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { UpdateProductGalleryDto } from './dto/update-product-gallery.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ProductGallery } from 'src/product-galleries/entities/product-gallery.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from 'src/product/entities/product.entity';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 @Injectable()
 export class ProductGalleriesService {
@@ -21,19 +22,27 @@ export class ProductGalleriesService {
     return this.galleryRepository.save(gallery);
   }
 
-  findAll() {
-    return `This action returns all productGalleries`;
+  async findOne(id: number) {
+    const gallery = await this.galleryRepository.findOne({
+      where: { id },
+    });
+
+    if (!gallery) throw new NotFoundException(`Gallery image ${id} not found`);
+
+    return gallery;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} productGallery`;
-  }
-
-  update(id: number, updateProductGalleryDto: UpdateProductGalleryDto) {
-    return `This action updates a #${id} productGallery`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} productGallery`;
+  async remove(id: number) {
+    const gallery = await this.findOne(id);
+    const imagePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'uploads',
+      'products',
+      gallery.image,
+    );
+    await fs.unlink(imagePath);
+    this.galleryRepository.remove(gallery);
   }
 }
