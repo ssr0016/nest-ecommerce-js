@@ -24,12 +24,15 @@ import { diskStorage } from 'multer';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  @Post()
+  // ['products', 'users']
+  @Post(':type')
   @UseInterceptors(
-    FileInterceptor('productImage', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: function (req, file, cb) {
-          cb(null, path.join(__dirname, '..', '..', 'uploads', 'products'));
+          const { type } = req.params;
+
+          cb(null, path.join(__dirname, '..', '..', 'uploads', type));
         },
         filename: function (req, file, cb) {
           const uniqueSuffix = Date.now();
