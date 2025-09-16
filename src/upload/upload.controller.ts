@@ -20,6 +20,45 @@ import { diskStorage } from 'multer';
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
+  // Multiple upload images
+  @Post('/products/:productId')
+  @UseInterceptors(
+    FilesInterceptor('files', 5, {
+      storage: diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, path.join(__dirname, '..', '..', 'uploads', 'products'));
+        },
+        filename: function (req, file, cb) {
+          const uniqueSuffix = Date.now();
+          cb(null, `${uniqueSuffix}-${file.originalname}`);
+        },
+      }),
+    }),
+  )
+  async uploadManyFile(
+    @Param('productId', ParseIntPipe) productId: number,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1048576 }),
+          new FileTypeValidator({
+            fileType: 'image/*',
+            skipMagicNumbersValidation: true,
+          }),
+        ],
+      }),
+    )
+    files: Array<Express.Multer.File>,
+  ) {
+    console.log('files', files);
+
+    await this.uploadService.uploadMany(files, productId);
+
+    return {
+      message: 'success',
+    };
+  }
+
   // ['products', 'users']
   @Post(':type/:entityId')
   @UseInterceptors(
@@ -54,30 +93,6 @@ export class UploadController {
     file: Express.Multer.File,
   ) {
     await this.uploadService.upload(type, entityId, file);
-    return {
-      message: 'success',
-    };
-  }
-
-  // ['products', 'users']
-  @Post('')
-  @UseInterceptors(FilesInterceptor('files'))
-  uploadManyFile(
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1048576 }),
-          new FileTypeValidator({
-            fileType: 'image/*',
-            skipMagicNumbersValidation: true,
-          }),
-        ],
-      }),
-    )
-    files: Array<Express.Multer.File>,
-  ) {
-    console.log('files', files);
-    // await this.uploadService.upload(type, entityId, files[0]);
     return {
       message: 'success',
     };
