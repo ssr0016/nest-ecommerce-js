@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
+// It checks if the type is in the allowed types ['products', 'users']
 @Injectable()
 export class ValidateFileTypeMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {

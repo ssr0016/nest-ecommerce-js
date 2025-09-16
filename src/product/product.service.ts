@@ -21,6 +21,11 @@ export class ProductService {
     private productRepository: Repository<Product>,
     private categoryService: CategoryService,
   ) {}
+
+  async save(product: Product) {
+    return this.productRepository.save(product);
+  }
+
   async create(createProductDto: CreateProductDto) {
     const category = await this.categoryService.findOne(
       createProductDto.categoryId,

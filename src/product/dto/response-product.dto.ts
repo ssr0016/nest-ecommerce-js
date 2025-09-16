@@ -8,6 +8,9 @@ export class ResponseProductDto {
   name: string;
 
   @Expose()
+  image: string;
+
+  @Expose()
   price: number;
 
   @Expose()

@@ -11,6 +11,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
@@ -25,7 +26,7 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   // ['products', 'users']
-  @Post(':type')
+  @Post(':type/:entityId')
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -41,7 +42,9 @@ export class UploadController {
       }),
     }),
   )
-  uploadFile(
+  async uploadFile(
+    @Param('type') type: string,
+    @Param('entityId', ParseIntPipe) entityId: number,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -55,9 +58,9 @@ export class UploadController {
     )
     file: Express.Multer.File,
   ) {
+    await this.uploadService.upload(type, entityId, file);
     return {
       message: 'success',
-      data: file,
     };
   }
 
