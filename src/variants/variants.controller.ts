@@ -3,14 +3,12 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   ParseIntPipe,
 } from '@nestjs/common';
 import { VariantsService } from './variants.service';
 import { CreateVariantDto } from './dto/create-variant.dto';
-import { UpdateVariantDto } from './dto/update-variant.dto';
 import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseVariantDto } from 'src/variants/dto/response-variant.dto';
@@ -35,13 +33,8 @@ export class VariantsController {
     return this.variantsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVariantDto: UpdateVariantDto) {
-    return this.variantsService.update(+id, updateVariantDto);
-  }
-
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.variantsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.variantsService.remove(id);
   }
 }
