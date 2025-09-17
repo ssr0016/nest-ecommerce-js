@@ -1,11 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVariantDto } from './dto/create-variant.dto';
 import { UpdateVariantDto } from './dto/update-variant.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Variant } from 'src/variants/entities/variant.entity';
+import { ProductService } from 'src/product/product.service';
 
 @Injectable()
 export class VariantsService {
-  create(createVariantDto: CreateVariantDto) {
-    return 'This action adds a new variant';
+  constructor(
+    @InjectRepository(Variant)
+    private variantRepository: Repository<Variant>,
+    private productService: ProductService,
+  ) {}
+
+  async create(createVariantDto: CreateVariantDto) {
+    const product = await this.productService.findOne(
+      createVariantDto.productId,
+    );
+
+    const variant = new Variant();
+    variant.product = product;
+
+    Object.assign(variant, {
+      ...createVariantDto,
+      name: createVariantDto.name.toLowerCase(),
+    });
+    return this.variantRepository.save(variant);
   }
 
   findAll() {
