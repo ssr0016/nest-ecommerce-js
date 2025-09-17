@@ -20,6 +20,8 @@ import { Product } from 'src/product/entities/product.entity';
 import { UploadModule } from './upload/upload.module';
 import { ProductGalleriesModule } from './product-galleries/product-galleries.module';
 import { ProductGallery } from 'src/product-galleries/entities/product-gallery.entity';
+import { VariantsModule } from './variants/variants.module';
+import { Variant } from 'src/variants/entities/variant.entity';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { ProductGallery } from 'src/product-galleries/entities/product-gallery.e
           Category,
           Product,
           ProductGallery,
+          Variant,
         ],
         synchronize: true,
       }),
@@ -55,6 +58,7 @@ import { ProductGallery } from 'src/product-galleries/entities/product-gallery.e
     ProductModule,
     UploadModule,
     ProductGalleriesModule,
+    VariantsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,7 @@
 import slugify from 'slugify';
 import { Category } from 'src/category/entities/category.entity';
 import { ProductGallery } from 'src/product-galleries/entities/product-gallery.entity';
+import { Variant } from 'src/variants/entities/variant.entity';
 import {
   AfterUpdate,
   BeforeInsert,
@@ -46,6 +47,9 @@ export class Product {
 
   @OneToMany(() => ProductGallery, (g) => g.product)
   galleries: ProductGallery[];
+
+  @OneToMany(() => Variant, (v) => v.product)
+  variants: Variant[];
 
   @DeleteDateColumn()
   deletedDate: Date;
