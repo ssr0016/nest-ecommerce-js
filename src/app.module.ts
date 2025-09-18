@@ -22,6 +22,8 @@ import { ProductGalleriesModule } from './product-galleries/product-galleries.mo
 import { ProductGallery } from 'src/product-galleries/entities/product-gallery.entity';
 import { VariantsModule } from './variants/variants.module';
 import { Variant } from 'src/variants/entities/variant.entity';
+import { VariantItemsModule } from './variant-items/variant-items.module';
+import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
 
 @Module({
   imports: [
@@ -44,6 +46,7 @@ import { Variant } from 'src/variants/entities/variant.entity';
           Product,
           ProductGallery,
           Variant,
+          VariantItem,
         ],
         synchronize: true,
       }),
@@ -59,6 +62,7 @@ import { Variant } from 'src/variants/entities/variant.entity';
     UploadModule,
     ProductGalleriesModule,
     VariantsModule,
+    VariantItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
