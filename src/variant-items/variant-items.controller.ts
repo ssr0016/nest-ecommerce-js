@@ -10,8 +10,12 @@ import {
 import { VariantItemsService } from './variant-items.service';
 import { CreateVariantItemDto } from './dto/create-variant-item.dto';
 import { UpdateVariantItemDto } from './dto/update-variant-item.dto';
+import { API_VERSION } from 'src/_cores/constants/app.constant';
+import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
+import { ResponseVariantItemsDto } from 'src/variant-items/dto/response-variant-items.dto';
 
-@Controller('variant-items')
+@Controller(`${API_VERSION}/variant-items`)
+@TransformDTO(ResponseVariantItemsDto)
 export class VariantItemsController {
   constructor(private readonly variantItemsService: VariantItemsService) {}
 
