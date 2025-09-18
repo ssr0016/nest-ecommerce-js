@@ -24,9 +24,9 @@ export class VariantItemsController {
     return this.variantItemsService.create(createVariantItemDto);
   }
 
-  @Get()
-  findAll() {
-    return this.variantItemsService.findAll();
+  @Get('/:variantId/variant')
+  findAll(@Param('variantId') variantId: number) {
+    return this.variantItemsService.findAll(variantId);
   }
 
   @Get(':id')

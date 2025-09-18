@@ -26,8 +26,12 @@ export class VariantItemsService {
     return this.variantRepository.save(variantItem);
   }
 
-  findAll() {
-    return `This action returns all variantItems`;
+  async findAll(variantId: number) {
+    const variant = await this.variantService.findOne(variantId);
+
+    return this.variantRepository.find({
+      where: { variant },
+    });
   }
 
   findOne(id: number) {
