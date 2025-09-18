@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { VariantItemsService } from './variant-items.service';
 import { CreateVariantItemDto } from './dto/create-variant-item.dto';
@@ -30,20 +31,12 @@ export class VariantItemsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.variantItemsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateVariantItemDto: UpdateVariantItemDto,
-  ) {
-    return this.variantItemsService.update(+id, updateVariantItemDto);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.variantItemsService.findOne(id);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.variantItemsService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.variantItemsService.remove(id);
   }
 }

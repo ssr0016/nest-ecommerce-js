@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateVariantItemDto } from './dto/create-variant-item.dto';
 import { UpdateVariantItemDto } from './dto/update-variant-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,7 +10,7 @@ import { VariantsService } from 'src/variants/variants.service';
 export class VariantItemsService {
   constructor(
     @InjectRepository(VariantItem)
-    private variantRepository: Repository<VariantItem>,
+    private variantItemsRepository: Repository<VariantItem>,
     private variantService: VariantsService,
   ) {}
 
@@ -23,26 +23,30 @@ export class VariantItemsService {
     variantItem.variant = variant;
 
     Object.assign(variantItem, createVariantItemDto);
-    return this.variantRepository.save(variantItem);
+    return this.variantItemsRepository.save(variantItem);
   }
 
   async findAll(variantId: number) {
     const variant = await this.variantService.findOne(variantId);
 
-    return this.variantRepository.find({
+    return this.variantItemsRepository.find({
       where: { variant },
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} variantItem`;
+  async findOne(id: number) {
+    const variantItems = await this.variantItemsRepository.findOne({
+      where: { id },
+    });
+
+    if (!variantItems) throw new BadRequestException(`No variant ${id} found`);
+
+    return variantItems;
   }
 
-  update(id: number, updateVariantItemDto: UpdateVariantItemDto) {
-    return `This action updates a #${id} variantItem`;
-  }
+  async remove(id: number) {
+    const variantItem = await this.findOne(id);
 
-  remove(id: number) {
-    return `This action removes a #${id} variantItem`;
+    await this.variantItemsRepository.remove(variantItem);
   }
 }
