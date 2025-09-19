@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateVariantItemDto } from './dto/create-variant-item.dto';
-import { UpdateVariantItemDto } from './dto/update-variant-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
