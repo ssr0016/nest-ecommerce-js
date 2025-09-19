@@ -6,6 +6,7 @@ import {
   UseGuards,
   Param,
   ParseIntPipe,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,6 +17,7 @@ import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseUserDto } from 'src/user/entities/response-user.dto';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Controller(`${API_VERSION}/users`)
 @TransformDTO(ResponseUserDto)
@@ -42,5 +44,13 @@ export class UserController {
   @Get('/:id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
   }
 }

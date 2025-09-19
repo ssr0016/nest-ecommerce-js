@@ -9,6 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { RoleService } from 'src/role/role.service';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -47,11 +48,22 @@ export class UserService {
       relations: { role: true },
     });
 
-    console.log(user);
-
     if (!user) throw new NotFoundException(`No user ${id} found`);
 
     return user;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+
+    user.firstName = updateUserDto.firstName
+      ? updateUserDto.firstName
+      : user.firstName;
+    user.lastName = updateUserDto.lastName
+      ? updateUserDto.lastName
+      : user.lastName;
+
+    return this.usersRepository.save(user);
   }
 
   remove(id: number) {
