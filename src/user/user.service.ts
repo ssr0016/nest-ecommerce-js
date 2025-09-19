@@ -66,7 +66,8 @@ export class UserService {
     return this.usersRepository.save(user);
   }
 
-  remove(id: number) {
-    return this.usersRepository.delete(id);
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    await this.usersRepository.softRemove(user);
   }
 }

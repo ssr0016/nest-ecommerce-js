@@ -22,7 +22,4 @@ export class CreateUserDto {
   @Length(6)
   @IsString()
   password: string;
-
-  @IsString()
-  role: string;
 }
