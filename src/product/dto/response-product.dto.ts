@@ -1,5 +1,21 @@
-import { Expose, Transform } from 'class-transformer';
+import { Expose, Transform, Type } from 'class-transformer';
 import { Product } from 'src/product/entities/product.entity';
+import { ResponseVariantItemsDto } from 'src/variant-items/dto/response-variant-items.dto';
+
+export class ResponseVariantDto {
+  @Expose()
+  id: number;
+
+  @Expose()
+  name: string;
+
+  @Expose()
+  productId: number;
+
+  @Expose()
+  @Type(() => ResponseVariantItemsDto)
+  items: ResponseVariantItemsDto[];
+}
 
 export class ResponseProductDto {
   @Expose()
@@ -34,4 +50,8 @@ export class ResponseProductDto {
   @Transform(({ obj }: { obj: Product }) => obj?.category?.name)
   @Expose()
   category: string;
+
+  @Expose()
+  @Type(() => ResponseVariantDto)
+  variants: ResponseVariantDto[];
 }

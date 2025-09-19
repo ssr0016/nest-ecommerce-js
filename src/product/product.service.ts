@@ -70,7 +70,10 @@ export class ProductService {
   async findOneBySlug(slug: string) {
     const product = await this.productRepository.findOne({
       where: { slug },
+      relations: { variants: { items: true } },
     });
+
+    console.log(product);
 
     if (!product)
       throw new NotFoundException(`Product with slug: ${slug} not found`);

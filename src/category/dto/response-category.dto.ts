@@ -1,5 +1,4 @@
 import { Expose, Type } from 'class-transformer';
-import { Category } from 'src/category/entities/category.entity';
 
 export class ResponseCategoryDto {
   @Expose()
@@ -16,5 +15,5 @@ export class ResponseCategoryDto {
 
   @Expose()
   @Type(() => ResponseCategoryDto)
-  children: Category[];
+  children: ResponseCategoryDto[];
 }
