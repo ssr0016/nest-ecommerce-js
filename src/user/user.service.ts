@@ -10,6 +10,9 @@ import {
 } from '@nestjs/common';
 import { RoleService } from 'src/role/role.service';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { ChangePwdUserDto } from 'src/user/dto/change-pwd-user.dto';
+import { UserPayload } from 'src/user/interfaces/user-payload.interface';
+import { SALT } from 'src/_cores/constants/app.constant';
 
 @Injectable()
 export class UserService {
@@ -23,7 +26,7 @@ export class UserService {
 
     const user = new User();
 
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, SALT);
 
     Object.assign(user, { ...createUserDto, password: hashedPassword, role });
 
@@ -69,5 +72,31 @@ export class UserService {
   async remove(id: number) {
     const user = await this.findOne(id);
     await this.usersRepository.softRemove(user);
+  }
+
+  async comparePassword(plainPassword: string, hashedPassword: string) {
+    return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async changePassword(
+    changePwdUserDto: ChangePwdUserDto,
+    currentUser: UserPayload,
+  ) {
+    const user = await this.findOne(currentUser.id);
+
+    const { currentPassword, newPassword, confirmPassword } = changePwdUserDto;
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) throw new BadRequestException(`'Wrong password`);
+
+    if (newPassword !== confirmPassword)
+      throw new BadRequestException(`Password don't match`);
+
+    const hashedPassword = await bcrypt.hash(newPassword, SALT);
+
+    user.password = hashedPassword;
+
+    await this.usersRepository.save(user);
   }
 }

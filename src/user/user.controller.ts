@@ -19,6 +19,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
 import { ResponseUserDto } from 'src/user/entities/response-user.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { ChangePwdUserDto } from 'src/user/dto/change-pwd-user.dto';
 
 @Controller(`${API_VERSION}/users`)
 @TransformDTO(ResponseUserDto)
@@ -35,6 +36,16 @@ export class UserController {
   @ApiBearerAuth('access-token')
   getCurrentUser(@CurrentUser() user: UserPayload) {
     return user;
+  }
+
+  @Post('/change-password')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('access-token')
+  changePassword(
+    @Body() changePwdUserDto: ChangePwdUserDto,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return this.userService.changePassword(changePwdUserDto, user);
   }
 
   @Get()
