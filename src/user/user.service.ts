@@ -32,6 +32,18 @@ export class UserService {
   }
 
   async findAll() {
-    return this.usersRepository.find();
+    return this.usersRepository.find({
+      relations: { role: true },
+    });
+  }
+
+  async findOne(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+
+    return user;
+  }
+
+  remove(id: number) {
+    return this.usersRepository.delete(id);
   }
 }

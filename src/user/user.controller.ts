@@ -6,8 +6,11 @@ import { CurrentUser } from 'src/_cores/decorators/current-user.decorators';
 import type { UserPayload } from 'src/user/interfaces/user-payload.interface';
 import { API_VERSION } from 'src/_cores/constants/app.constant';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { TransformDTO } from 'src/_cores/interceptors/transfrom-dto.interceptors';
+import { ResponseUserDto } from 'src/user/entities/response-user.dto';
 
 @Controller(`${API_VERSION}/users`)
+@TransformDTO(ResponseUserDto)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -21,5 +24,10 @@ export class UserController {
   @ApiBearerAuth('access-token')
   getCurrentUser(@CurrentUser() user: UserPayload) {
     return user;
+  }
+
+  @Get()
+  findAll() {
+    return this.userService.findAll();
   }
 }
