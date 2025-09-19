@@ -50,6 +50,6 @@ export class VariantsService {
   async remove(id: number) {
     const variant = await this.findOne(id);
 
-    return this.variantRepository.remove(variant);
+    await this.variantRepository.remove(variant);
   }
 }
