@@ -22,6 +22,7 @@ import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { ChangePwdUserDto } from 'src/user/dto/change-pwd-user.dto';
 
 @Controller(`${API_VERSION}/users`)
+@UseGuards(AuthGuard)
 @TransformDTO(ResponseUserDto)
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -32,14 +33,12 @@ export class UserController {
   }
 
   @Get('/me')
-  @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   getCurrentUser(@CurrentUser() user: UserPayload) {
     return user;
   }
 
   @Post('/change-password')
-  @UseGuards(AuthGuard)
   @ApiBearerAuth('access-token')
   changePassword(
     @Body() changePwdUserDto: ChangePwdUserDto,
@@ -58,7 +57,16 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('/me')
+  @ApiBearerAuth('access-token')
+  updateMe(
+    @CurrentUser() user: UserPayload,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.updateMe(user, updateUserDto);
+  }
+
+  @Patch('/:id')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
