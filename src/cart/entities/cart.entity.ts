@@ -1,8 +1,10 @@
+import { CartItem } from 'src/cart/entities/cart-item.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -18,4 +20,8 @@ export class Cart {
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+
+  // bi-directional
+  @OneToMany(() => CartItem, (item) => item.cart)
+  items: CartItem[];
 }

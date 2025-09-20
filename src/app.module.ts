@@ -26,6 +26,7 @@ import { VariantItemsModule } from './variant-items/variant-items.module';
 import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
 import { CartModule } from './cart/cart.module';
 import { Cart } from 'src/cart/entities/cart.entity';
+import { CartItem } from 'src/cart/entities/cart-item.entity';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { Cart } from 'src/cart/entities/cart.entity';
           Variant,
           VariantItem,
           Cart,
+          CartItem,
         ],
         synchronize: true,
       }),
