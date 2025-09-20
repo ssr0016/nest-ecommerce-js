@@ -24,6 +24,8 @@ import { VariantsModule } from './variants/variants.module';
 import { Variant } from 'src/variants/entities/variant.entity';
 import { VariantItemsModule } from './variant-items/variant-items.module';
 import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
+import { CartModule } from './cart/cart.module';
+import { Cart } from 'src/cart/entities/cart.entity';
 
 @Module({
   imports: [
@@ -47,6 +49,7 @@ import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
           ProductGallery,
           Variant,
           VariantItem,
+          Cart,
         ],
         synchronize: true,
       }),
@@ -63,6 +66,7 @@ import { VariantItem } from 'src/variant-items/entities/variant-item.entity';
     ProductGalleriesModule,
     VariantsModule,
     VariantItemsModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],
