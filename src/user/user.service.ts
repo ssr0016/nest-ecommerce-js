@@ -13,6 +13,7 @@ import { UpdateUserDto } from 'src/user/dto/update-user.dto';
 import { ChangePwdUserDto } from 'src/user/dto/change-pwd-user.dto';
 import { UserPayload } from 'src/user/interfaces/user-payload.interface';
 import { SALT } from 'src/_cores/constants/app.constant';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private roleService: RoleService,
+    private cartService: CartService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const role = await this.roleService.getRole('user');
@@ -30,7 +32,11 @@ export class UserService {
 
     Object.assign(user, { ...createUserDto, password: hashedPassword, role });
 
-    return this.usersRepository.save(user);
+    const userSaved = await this.usersRepository.save(user);
+
+    await this.cartService.create(userSaved);
+
+    return userSaved;
   }
 
   async findByEmail(email: string) {
