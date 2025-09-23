@@ -17,7 +17,7 @@ export class CartItem {
   variant: string; // {size: 'XL', color: 'red'}
 
   @ManyToOne(() => Product)
-  product: Product[];
+  product: Product;
 
   @ManyToOne(() => Cart)
   cart: Cart;

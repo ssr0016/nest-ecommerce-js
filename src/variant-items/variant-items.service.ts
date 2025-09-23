@@ -36,6 +36,7 @@ export class VariantItemsService {
   async findOne(id: number) {
     const variantItems = await this.variantItemsRepository.findOne({
       where: { id },
+      relations: { variant: true },
     });
 
     if (!variantItems) throw new BadRequestException(`No variant ${id} found`);

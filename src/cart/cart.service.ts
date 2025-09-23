@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cart } from 'src/cart/entities/cart.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CartItem } from 'src/cart/entities/cart-item.entity';
 import { User } from 'src/user/entities/user.entity';
+import { AddToCartDto } from './dto/add-to-cart.dto';
+import { ProductService } from 'src/product/product.service';
+import { UserPayload } from 'src/user/interfaces/user-payload.interface';
+import { VariantItemsService } from 'src/variant-items/variant-items.service';
 
 @Injectable()
 export class CartService {
@@ -13,6 +15,8 @@ export class CartService {
     @InjectRepository(Cart) private cartRepository: Repository<Cart>,
     @InjectRepository(CartItem)
     private cartItemRepository: Repository<CartItem>,
+    private productService: ProductService,
+    private variantItemsService: VariantItemsService,
   ) {}
   create(user: User) {
     const cart = new Cart();
@@ -20,19 +24,35 @@ export class CartService {
     return this.cartRepository.save(cart);
   }
 
-  findAll() {
-    return `This action returns all cart`;
+  async findCart(userId: number) {
+    const cart = await this.cartRepository.findOne({
+      where: { user: { id: userId } },
+    });
+
+    if (!cart) throw new NotFoundException('No cart found for this user');
+
+    return cart;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
-  }
+  async addItemToCart(addToCartDto: AddToCartDto, currentUser: UserPayload) {
+    const { quantity, variantItemId, productId } = addToCartDto;
 
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
-  }
+    const product = await this.productService.findOne(productId);
+    const variantItem = await this.variantItemsService.findOne(variantItemId);
 
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+    const variant = {
+      variant: variantItem.variant.name,
+      value: variantItem.value,
+      price: variantItem.price,
+    };
+
+    const cartItem = new CartItem();
+    cartItem.product = product;
+    cartItem.cart = await this.findCart(currentUser.id);
+    cartItem.price = product.price;
+    cartItem.quantity = quantity;
+    cartItem.variant = JSON.stringify(variant);
+
+    await this.cartItemRepository.save(cartItem);
   }
 }
