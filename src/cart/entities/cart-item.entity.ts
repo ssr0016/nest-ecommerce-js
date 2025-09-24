@@ -16,6 +16,9 @@ export class CartItem {
   @Column({ type: 'text' })
   variant: string; // {size: 'XL', color: 'red'}
 
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  totalPrice: number;
+
   @ManyToOne(() => Product)
   product: Product;
 

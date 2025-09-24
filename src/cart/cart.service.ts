@@ -41,10 +41,32 @@ export class CartService {
     const variantItem = await this.variantItemsService.findOne(variantItemId);
 
     const variant = {
+      itemId: variantItem.id,
       variant: variantItem.variant.name,
       value: variantItem.value,
       price: variantItem.price,
     };
+
+    const totalPrice =
+      product.price * quantity + parseFloat(`${variant.price}`) * quantity;
+
+    const cartItemExisting = await this.cartItemRepository.findOne({
+      where: {
+        product,
+      },
+    });
+
+    if (
+      cartItemExisting &&
+      JSON.parse(cartItemExisting.variant).itemId === variant.itemId
+    ) {
+      cartItemExisting.quantity = cartItemExisting.quantity + quantity;
+      cartItemExisting.totalPrice =
+        cartItemExisting.quantity *
+        (product.price + parseFloat(`${variant.price}`));
+      await this.cartItemRepository.save(cartItemExisting);
+      return;
+    }
 
     const cartItem = new CartItem();
     cartItem.product = product;
@@ -52,6 +74,7 @@ export class CartService {
     cartItem.price = product.price;
     cartItem.quantity = quantity;
     cartItem.variant = JSON.stringify(variant);
+    cartItem.totalPrice = totalPrice;
 
     await this.cartItemRepository.save(cartItem);
   }
