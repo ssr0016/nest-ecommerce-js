@@ -78,4 +78,21 @@ export class CartService {
 
     await this.cartItemRepository.save(cartItem);
   }
+
+  async findOneCartItem(cartItemId: number) {
+    const cartItem = await this.cartItemRepository.findOne({
+      where: { id: cartItemId },
+    });
+
+    if (!cartItem)
+      throw new NotFoundException(`Cart item: ${cartItemId} not found`);
+
+    return cartItem;
+  }
+
+  async removeItemFromCart(cartIteId: number) {
+    const cartItem = await this.findOneCartItem(cartIteId);
+
+    await this.cartItemRepository.remove(cartItem);
+  }
 }
