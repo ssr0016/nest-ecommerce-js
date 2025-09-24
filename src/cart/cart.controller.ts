@@ -37,7 +37,10 @@ export class CartController {
   }
 
   @Delete('/item/:cartItemId')
-  deleteItemFromCart(@Param('cartItemId', ParseIntPipe) cartItemId: number) {
-    return this.cartService.removeItemFromCart(cartItemId);
+  deleteItemFromCart(
+    @Param('cartItemId', ParseIntPipe) cartItemId: number,
+    @CurrentUser() user: UserPayload,
+  ) {
+    return this.cartService.removeItemFromCart(cartItemId, user);
   }
 }
