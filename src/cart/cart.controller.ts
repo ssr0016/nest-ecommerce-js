@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -28,6 +29,11 @@ export class CartController {
     @CurrentUser() user: UserPayload,
   ) {
     return this.cartService.addItemToCart(addToCartDto, user);
+  }
+
+  @Get('/me')
+  getMyCart(@CurrentUser() user: UserPayload) {
+    return this.cartService.findCart(user.id);
   }
 
   @Delete('/item/:cartItemId')
