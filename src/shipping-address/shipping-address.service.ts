@@ -28,8 +28,22 @@ export class ShippingAddressService {
     return this.shippingAddressRepository.save(shippingAddress);
   }
 
-  findAll() {
-    return `This action returns all shippingAddress`;
+  async findAll() {
+    const shippingAddress = await this.shippingAddressRepository.find({
+      relations: { user: true },
+    });
+
+    return shippingAddress;
+  }
+
+  async findMyAddresses(currentUser: UserPayload) {
+    const shippingAddress = await this.shippingAddressRepository.find({
+      where: { user: { id: currentUser.id } },
+      relations: { user: true },
+    });
+    console.log(shippingAddress);
+
+    return shippingAddress;
   }
 
   findOne(id: number) {

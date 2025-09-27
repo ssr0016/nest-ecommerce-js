@@ -1,4 +1,5 @@
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
+import { ShippingAddress } from 'src/shipping-address/entities/shipping-address.entity';
 
 export class ResponseShippingAddressDto {
   @Expose()
@@ -7,4 +8,7 @@ export class ResponseShippingAddressDto {
   value: string;
   @Expose()
   phoneNumber: string;
+  @Expose()
+  @Transform(({ obj }: { obj: ShippingAddress }) => obj.user.id)
+  userId: number;
 }
